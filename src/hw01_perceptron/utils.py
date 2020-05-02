@@ -2,7 +2,7 @@ import random
 from nltk import word_tokenize
 
 def dot(dictA, dictB):
-    return 0 # TODO: Ex. 2: return vector product between features vectors represented by dictA and dictB.
+    return sum([dictA.get(tok) * dictB.get(tok, 0) for tok in dictA])
 
 def normalized_tokens(text):
     return [token.lower() for token in word_tokenize(text)]
@@ -18,6 +18,9 @@ class DataInstance:
         """ Creates feature counts for all features in the list."""
         feature_counts = dict()
         # TODO: Ex. 3: create a dictionary that contains for each feature in the list the count how often it occurs.
+        for word in feature_list:
+            count = feature_counts.get(word, 0)
+            feature_counts[word] = count + 1
         return cls(feature_counts, label)
 
     @classmethod
