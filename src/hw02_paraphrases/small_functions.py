@@ -9,7 +9,7 @@ def square_roots(start, end, length):
     >>> square_roots(4,9,3)
     array([2.        , 2.54950976, 3.        ])
     """
-    pass  # TODO: Exercise 2.1
+    return np.sqrt(np.linspace(start, end, length))
 
 
 def odd_ones_squared(rows, cols):
@@ -22,4 +22,12 @@ def odd_ones_squared(rows, cols):
            [ 25,   6,  49,   8,  81],
            [ 10, 121,  12, 169,  14]])
     """
-    pass  # TODO: Exercise 2.2
+    result = np.full((rows,cols), 0)
+    count = 0
+    for i in np.nditer(result, op_flags = ['readwrite']):
+        for j in np.nditer(i, op_flags = ['readwrite']):
+            j += count
+            if j % 2 == 1:
+                j *= j
+            count += 1
+    return result

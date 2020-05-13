@@ -20,27 +20,31 @@ def character_ngrams(text, n):
 def token_ngrams(tokens, n):
     """ Returns a list of lists with n-grams."""
     # TODO Exercise 1.1
-    return []
+    return [" ".join(tokens[i:i+n]) for i in range(len(tokens)) if i+n <= len(tokens)]
 
 def token_features(tokens1, tokens2):
-    features = dict()
+    # features = dict()
     #  TODO Exercise 1.2
-    return features
+    return {WORD_OVERLAP: len([x for x in tokens1 if x in tokens2]), WORD_UNION: len(tokens1.union(tokens2))}
 
 def word_ngram_features(ngrams1, ngrams2):
-    features = dict()
+    # features = dict()
     # TODO Exercise 1.3
-    return features
+    return {WORD_NGRAM_OVERLAP: len([x for x in ngrams1 if x in ngrams2]), WORD_NGRAM_UNION: len(ngrams1.union(ngrams2))}
 
 def character_ngram_features(ngrams1, ngrams2):
-    features = dict()
+    # features = dict()
     # TODO Exercise 1.4
-    return features
+    return {CHARACTER_NGRAM_OVERLAP: len([x for x in ngrams1 if x in ngrams2]), CHARACTER_NGRAM_UNION: len(ngrams1.union(ngrams2))}
 
 def wordpair_features(tokens1, tokens2):
-    features = dict()
+    # features = dict()
     # TODO Exercise 1.5
-    return features
+    temp = []
+    for x in tokens1:
+        for y in tokens2:
+            temp.append(x + "#" + y)
+    return {x: 1 for x in temp}
 
 def paraphrases_to_dataset(filename, f_token=True, f_w_ngram=True, f_c_ngram=True, f_wordpair=True):
     """
