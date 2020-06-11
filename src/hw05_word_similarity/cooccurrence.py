@@ -4,7 +4,6 @@ from functools import lru_cache
 import math
 
 
-
 def vocabulary_from_wordlist(word_list, vocab_size):
     """ Returns set of vocab_size most frequent words from a given list of words.
 
@@ -15,8 +14,7 @@ def vocabulary_from_wordlist(word_list, vocab_size):
     >>> v == {'a', 'rose', 'is'}
     True
     """
-    # TODO: Exercise 1
-    pass
+    return set (word for word, count in Counter(word_list).most_common(vocab_size))
 
 
 def cooccurrences(tokens, n, vocab):
@@ -32,14 +30,30 @@ def cooccurrences(tokens, n, vocab):
     >>> cooccurrences(["a","rose","is","a","rose"], 1, {"rose", "is"}) == {('rose', 'is'): 1, ('is', 'rose'): 1}
     True
     """
+    cooc_dict = defaultdict(int)
+    size = n + 1
+    for i, f_middle_word in enumerate(tokens):
 
-    # TODO insert code here
-    # you can use your code from hw04_cooccurrence/cooccurrence.py, but you have to adjust it a little bit.
-    # this method takes tokens (not a text like in hw04), and is also given the vocabulary
-    # and considers only those words in the vocabulary
-    # or
-    # use the code provided in cooc_func.nopy on the website/moodle
-    pass
+        # forward (right windows)
+        if f_middle_word in vocab:
+            f_context = tokens[0 + i + 1:i + size]
+            for context_word in f_context:
+                if context_word not in vocab:
+                    continue
+                cooc_dict[(f_middle_word, context_word)] += 1
+
+        # backward (left windows)
+        b_middle_word = tokens[-i - 1]
+
+        if b_middle_word not in vocab:
+            continue
+        b_context = tokens[-i - size:-i - 1]
+        for context_word in b_context:
+            if context_word not in vocab:
+                continue
+            cooc_dict[(b_middle_word, context_word)] += 1
+
+    return cooc_dict
 
 
 def cooc_dict_to_matrix(cooc_dict, vocab):
@@ -60,10 +74,8 @@ def cooc_dict_to_matrix(cooc_dict, vocab):
     """
     word_to_id = {w: i for i, w in enumerate(sorted(vocab))}
     m = lil_matrix((len(vocab), len(vocab)))
-    # TODO insert code here
-    # you can use your code from hw04_cooccurrence/cooccurrence.py
-    # or
-    # use the code provided in cooc_func.nopy on the website/moodle
+    for (w1, w2), count in cooc_dict.items():
+        m[word_to_id[w1], word_to_id[w2]] = count
     return m, word_to_id
 
 
@@ -92,9 +104,13 @@ def ppmi_weight(cooc_matrix):
     ppmi_matrix = lil_matrix(cooc_matrix.shape)
     rows, cols = cooc_matrix.nonzero()
     for row, col in zip(rows, cols):
-        # TODO insert code here
-        # you can use your code from hw04_cooccurrence/cooccurrence.py
-        # or
-        # use the code provided in cooc_func.nopy on the website/moodle
-        pass
+        prc = cooc_matrix[row, col]
+        pr = sum_in_row[row]
+        pc = sum_in_col[col]
+
+        ppmi = math.log(prc) + math.log(sum_total) - math.log(pr) - math.log(pc)
+
+        if ppmi > 0:
+            ppmi_matrix[row, col] = ppmi
+
     return ppmi_matrix
