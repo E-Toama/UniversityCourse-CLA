@@ -32,9 +32,11 @@ class SkipGram:
         """
         ctxt_vec = self.context_word_matrix[context_id]
         tgt_vec = self.target_word_matrix[target_id]
-        prob_pos = 0.5 # TODO: Replace by probability that pair belongs to positive category.
-        # TODO: update context_word_matrix[context_id] using gradient and learning rate
-        # TODO: update target_word_matrix[target_id] using gradient and learning rate
+        prob_pos = utils.sigmoid(tgt_vec.dot(ctxt_vec.T))
+        context_grad = learning_rate * (label - prob_pos) * tgt_vec
+        target_grad = learning_rate * (label - prob_pos) * ctxt_vec
+        self.context_word_matrix[context_id] += context_grad
+        self.target_word_matrix[target_id] += target_grad
         return math.log(prob_pos) if label else math.log(1 - prob_pos)
 
     def train_iter(self, learning_rate=0.1):
