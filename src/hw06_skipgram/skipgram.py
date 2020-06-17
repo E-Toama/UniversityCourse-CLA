@@ -20,7 +20,7 @@ class SkipGram:
         self.target_word_matrix = 0.1 * np.random.randn(rows, num_dims)
         self.context_word_matrix = 0.1 * np.random.randn(rows, num_dims)
 
-    def update(self, target_id, context_id, label, learning_rate): # TODO: Exercise 4.
+    def update(self, target_id, context_id, label, learning_rate):
         """
         Performs a gradient update for one instance.
 
