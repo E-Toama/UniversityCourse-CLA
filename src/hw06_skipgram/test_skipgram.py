@@ -31,7 +31,7 @@ class test_word_similarity(TestCase):
                                                                           neg_samples_factor=100,
                                                                           vocab_to_id=vocab_dict)
         self.assertIsNotNone(pos_neg_cooccurrences)
-        with_negatives = list(pos_neg_cooccurrences)
+        with_negatives = sorted(pos_neg_cooccurrences)
 
 
         # Count number of positive target words for id "2"
