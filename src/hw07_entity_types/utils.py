@@ -25,6 +25,19 @@ def read_word2vec_file(filename):
     word_to_id = dict()
     m_word_vectors = None
     # TODO Exercise 1
+    vectors = []
+    f = open(filename, "r")
+    contents = f.readlines()
+    f.close()
+    words_count = int(contents[0].strip().split(" ")[0])
+    dims_count = int(contents[0].strip().split(" ")[1])
+    m_word_vectors = np.empty((words_count, dims_count), dtype=np.float)
+    line_number = 0
+    for line in contents[1:]:
+        fields = line.strip().split(" ")
+        word_to_id[fields[0]] = line_number
+        m_word_vectors[line_number] = np.fromiter((float(x) for x in fields[1:]), dtype=np.float)
+        line_number += 1
 
     return m_word_vectors, word_to_id
 
@@ -71,7 +84,11 @@ def read_entity_types_file(filename, m_word_vectors, word_to_id, type_to_id = No
             parts = line.strip().split("\t")
             token_ids = [word_to_id[t] for t in parts[0].split(" ") if t in word_to_id]
             num_tokens = len(token_ids)
-            avg_feature_vec = None  # TODO: Exercise 2
+            avg_feature_vec = np.zeros(num_dims)  # TODO: Exercise 2
+            for token in token_ids:
+                avg_feature_vec += m_word_vectors[token]
+            if num_tokens != 0:
+                avg_feature_vec /= num_tokens
             feature_rows.append(avg_feature_vec)
             for type in parts[1].split(" "):
                 if grow_type_dict and type not in type_to_id:

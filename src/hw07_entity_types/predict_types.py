@@ -13,12 +13,13 @@ def train_evaluate_type_prediction(embeddings_file, train_file, test_file):
     x_test, y_test, _ = utils.read_entity_types_file(test_file, word_vectors, word_to_id, type_to_id)
 
     # Training
-    classifier = None # TODO: Exercise 3
+    classifier = OneVsRestClassifier(LogisticRegression()) # TODO: Exercise 3
+    classifier.fit(x_train, y_train)
 
     # Prediction
-    prediction_test = None # TODO
+    prediction_test = classifier.predict(x_test)
 
-    return 0, 0, 0 # TODO: Remove after initializing 'classifier' and 'prediction_test'
+    #return 0, 0, 0 # TODO: Remove after initializing 'classifier' and 'prediction_test'
 
     # Total number of positives
     relevant = y_test.sum()
@@ -27,11 +28,11 @@ def train_evaluate_type_prediction(embeddings_file, train_file, test_file):
     predicted = prediction_test.sum()
 
     # True Positive.
-    relevant_predicted = 0 # TODO
+    relevant_predicted = y_test.multiply(prediction_test).sum()
 
-    precision = 0 # TODO
-    recall = 0 # TODO
-    f_score = 0 # TODO
+    precision = relevant_predicted/predicted if predicted != 0 else 0
+    recall = relevant_predicted/relevant if relevant != 0 else 0
+    f_score = 2*precision*recall/(precision + recall) if precision + recall != 0 else 0
     return precision, recall, f_score
 
 
