@@ -22,7 +22,7 @@ def create_dictionary(texts, vocab_size):
     for tokens in texts:
         counter.update(tokens)
     vocab = [w for w,c in counter.most_common(vocab_size-1)]
-    pass # TODO: Exercise 1.
+    return dict([(UNKNOWN_TOKEN, 0)] + [(word, ind) for (word, ind) in zip(vocab, range(1, vocab_size))])
 
 def to_ids(words, dictionary):
     """
@@ -32,7 +32,7 @@ def to_ids(words, dictionary):
 
     :return list of ids for each token (placeholder '<unk>' for unknown tokens)
     """
-    pass # TODO: Exercise 2.
+    return [dictionary.get(word, dictionary[UNKNOWN_TOKEN]) for word in words]
 
 
 def nltk_data(n_texts_train=1500, n_texts_dev=500, vocab_size=10000):
